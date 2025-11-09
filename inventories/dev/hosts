@@ -1,0 +1,2 @@
+[nautobot_servers]
+# IP will be injected via dynamic inventory using terraform output or GitHub Actions

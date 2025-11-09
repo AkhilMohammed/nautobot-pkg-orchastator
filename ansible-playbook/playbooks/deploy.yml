@@ -1,0 +1,19 @@
+- name: Provision EC2 and Deploy Nautobot
+  hosts: localhost
+  gather_facts: no
+  vars_files:
+    - ../inventories/dev/group_vars/nautobot.yml
+  tasks:
+    - name: Run Terraform apply
+      command: terraform init && terraform apply -auto-approve
+      args:
+        chdir: ../terraform
+
+- name: Deploy Nautobot on remote
+  hosts: nautobot_servers
+  become: yes
+  vars_files:
+    - ../inventories/dev/group_vars/nautobot.yml
+  roles:
+    - common
+    - nautobot_deploy

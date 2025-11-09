@@ -1,0 +1,2 @@
+[nautobot_servers]
+# The EC2 instance IP will be injected dynamically during workflow

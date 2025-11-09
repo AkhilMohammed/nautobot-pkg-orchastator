@@ -1,0 +1,10 @@
+nautobot_plugins:
+  - name: nautobot-plugin-example
+    repo: git@github.com:yourorg/nautobot-plugin-example.git
+  - name: nautobot-plugin-extra
+    repo: git@github.com:yourorg/nautobot-plugin-extra.git
+
+db_config:
+  name: nautobotdb
+  user: nautobotuser
+  password: supersecretpassword

@@ -1,0 +1,42 @@
+name: Deploy Nautobot Plugins
+
+on:
+  push:
+    paths:
+      - "inventories/dev/group_vars/nautobot.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+      
+      - name: Terraform Init & Apply
+        run: |
+          terraform init
+          terraform apply -auto-approve
+        working-directory: ./terraform
+      
+      - name: Capture Terraform output
+        id: terraform_output
+        run: |
+          echo "::set-output name=instance_ip::$(terraform output -raw instance_ip)"
+        working-directory: ./terraform
+
+      - name: Set up Python and Ansible
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install Ansible and boto3
+        run: |
+          pip install ansible boto3
+
+      - name: Run Ansible playbook
+        run: |
+          ansible-playbook ./ansible-playbook/playbooks/deploy.yml -i ${{ steps.terraform_output.outputs.instance_ip }}, --extra-vars 'env=dev'

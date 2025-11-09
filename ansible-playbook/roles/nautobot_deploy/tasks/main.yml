@@ -1,0 +1,14 @@
+- name: Clone all plugin repos
+  git:
+    repo: '{{ item.repo }}'
+    dest: /opt/nautobot/plugins/{{ item.name }}
+    update: yes
+  loop: '{{ nautobot_plugins }}'
+
+- name: Generate nautobot_config.py with plugin settings
+  template:
+    src: nautobot_config.py.j2
+    dest: /opt/nautobot/nautobot_config.py
+
+- name: Deploy Nautobot and dependencies via docker-compose
+  shell: docker-compose -f /opt/nautobot/docker-compose.yml up -d

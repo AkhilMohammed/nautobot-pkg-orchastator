@@ -1,0 +1,28 @@
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '{{ db_config.name }}',
+        'USER': '{{ db_config.user }}',
+        'PASSWORD': '{{ db_config.password }}',
+        'HOST': 'postgres',
+        'PORT': 5432,
+    }
+}
+
+PLUGINS = [
+{%- for plugin in nautobot_plugins %}
+    '{{ plugin.name }}',
+{%- endfor %}
+]
+
+PLUGINS_CONFIG = {
+    # Add plugin-specific config here
+}
+
+REDIS = {
+    'tasks': {
+        'host': 'redis',
+        'port': 6379,
+        'database': 0,
+    }
+}
